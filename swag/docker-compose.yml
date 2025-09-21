@@ -27,7 +27,7 @@ services:
       - ./config/swag-ssl:/swag-ssl
       # Optional: mount custom nginx configs
       - ./nginx/proxy-confs:/config/nginx/proxy-confs:ro
-      - ./nginx/site-confs:/config/nginx/site-confs:ro
+      - ./nginx/site-confs:/config/nginx/site-confs
     ports:
       - "443:443"
       - "80:80"
