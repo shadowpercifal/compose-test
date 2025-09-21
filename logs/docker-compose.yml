@@ -3,7 +3,6 @@ version: '3.8'
 services:
   loki:
     image: grafana/loki:2.9.4
-    container_name: rustbot-loki
     labels:
       logging: "enabled"
       logging_job: "loki"
@@ -26,7 +25,6 @@ services:
 
   promtail:
     image: grafana/promtail:2.9.4
-    container_name: rustbot-promtail
     labels:
       logging: "enabled"
       logging_job: "promtail"
@@ -46,7 +44,6 @@ services:
 
   grafana:
     image: grafana/grafana:10.4.2
-    container_name: rustbot-grafana
     labels:
       logging: "enabled"
       logging_job: "grafana"
