@@ -4,6 +4,9 @@ services:
     container_name: swag
     cap_add:
       - NET_ADMIN
+    env_file:
+      - ./.env
+      - ./../.env.proxy
     environment:
       - PUID=1000
       - PGID=1000
@@ -18,9 +21,6 @@ services:
       # Enable hot-reload for nginx configs
       - AUTO_RELOAD=true
       - SWAG_AUTORELOAD_WATCHLIST=/config/nginx/site-confs|/config/nginx/proxy-confs
-    env-file:
-      - ./.env
-      - ./../.env.proxy
 
     volumes:
       - ./config:/config
