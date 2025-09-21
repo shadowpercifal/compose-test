@@ -1,0 +1,46 @@
+services:
+  swag:
+    image: lscr.io/linuxserver/swag:latest
+    container_name: swag
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Moscow
+      - URL=fzbw.ru
+      - SUBDOMAINS=wildcard
+      - VALIDATION=dns
+      - CERTPROVIDER=letsencrypt
+      - DNSPLUGIN=cloudflare
+      - ONLY_SUBDOMAINS=false
+      - EMAIL=flazebrown@gmail.com  # Replace with your email
+      # Enable hot-reload for nginx configs
+      - AUTO_RELOAD=true
+      - SWAG_AUTORELOAD_WATCHLIST=/config/nginx/site-confs|/config/nginx/proxy-confs
+    env-file:
+      - ./.env
+      - ./../.env.proxy
+
+    volumes:
+      - ./config:/config
+      - ./config/swag-ssl:/swag-ssl
+      # Optional: mount custom nginx configs
+      - ./nginx/proxy-confs:/config/nginx/proxy-confs:ro
+      - ./nginx/site-confs:/config/nginx/site-confs:ro
+    ports:
+      - "443:443"
+      - "80:80"
+    restart: unless-stopped
+    networks:
+      - rustbot-main
+    healthcheck:
+      test: ["CMD", "curl", "-f", "https://localhost:443/", "-k"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  rustbot-main:
+    external: true

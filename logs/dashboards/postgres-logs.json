@@ -1,0 +1,38 @@
+{
+  "annotations": {"list": []},
+  "editable": true,
+  "panels": [
+    {
+      "type": "logs",
+      "title": "PostgreSQL Logs",
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 20 },
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": true,
+        "showCommonLabels": true,
+        "showLabels": true,
+        "showTime": true,
+        "wrapLogMessage": true
+      },
+      "targets": [
+        { "expr": "{job=\"docker-containers\", service=\"postgres\"}" }
+      ]
+    },
+    {
+      "type": "logs",
+      "title": "pgAdmin Logs",
+      "gridPos": { "x": 0, "y": 20, "w": 24, "h": 12 },
+      "options": { "wrapLogMessage": true },
+      "targets": [
+        { "expr": "{job=\"docker-containers\", service=\"pgadmin\"}" }
+      ]
+    }
+  ],
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["postgres", "logs"],
+  "time": { "from": "now-24h", "to": "now" },
+  "title": "Database Logs",
+  "version": 1
+}

@@ -1,0 +1,15 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "RustBot PostgreSQL",
+      "Group": "RustBot",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "rustbot",
+      "Username": "rustbot",
+      "PassFile": "/pgadmin4/pgpass",
+      "SSLMode": "prefer",
+      "Favorite": true
+    }
+  }
+}

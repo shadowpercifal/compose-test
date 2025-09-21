@@ -1,0 +1,4 @@
+# PostgreSQL connection file for pgAdmin
+# Format: hostname:port:database:username:password
+postgres:5432:rustbot:rustbot:your-secure-password-here
+postgres:5432:*:rustbot:your-secure-password-here
