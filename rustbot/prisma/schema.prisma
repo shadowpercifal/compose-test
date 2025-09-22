@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Глобальные статусы объектов сообщества
+enum Status {
+  open
+  closed
+  active
+  available
+  unavailable
+  hidden
+  cancelled
+  planned
+  expired
+  accepted
+  declined
+  processing
+}
+
+/// Типы действий/взаимодействий
+enum ActionType {
+  Warn
+  Pred
+  Honour
+  Raport
+}
+
+/// Участник сообщества (игрок/модератор/руководство)
+model Member {
+  /// Идентификатор (целое, автоинкремент)
+  id           Int       @id @default(autoincrement())
+  /// Статус участника
+  status       Status    @default(active)
+  /// Discord ID
+  discordId    String
+  /// Steam ID
+  steamId      String
+  /// Текущий ранг (битовая маска)
+  rank         Int       @default(0)
+  /// Дата вступления
+  joinedAt     DateTime  @default(now())
+  /// Дата выхода (если покинул)
+  leftAt       DateTime?
+
+  /// Действия, совершённые этим участником
+  actionsBy    Action[]  @relation("actions_by")
+  /// Действия, направленные на этого участника
+  actionsTo    Action[]  @relation("actions_to")
+
+  @@index([discordId])
+  @@index([steamId])
+}
+
+/// Запись о действии (награда, предупреждение, отчёт и т.д.)
+model Action {
+  /// Идентификатор (целое, автоинкремент)
+  id                Int         @id @default(autoincrement())
+  /// Статус действия
+  status            Status      @default(active)
+  /// Время совершения
+  performedAt       DateTime    @default(now())
+  /// Время последнего обновления
+  updatedAt         DateTime    @updatedAt
+
+  /// Исполнитель (кто совершил действие)
+  performedById     Int
+  performedBy       Member      @relation("actions_by", fields: [performedById], references: [id])
+  /// Роль исполнителя (битовая маска)
+  performedByRole   Int         @default(0)
+
+  /// Адресат (на кого действие направлено), может отсутствовать
+  performedToId     Int?
+  performedTo       Member?     @relation("actions_to", fields: [performedToId], references: [id])
+  /// Роль адресата (битовая маска)
+  performedToRole   Int?
+
+  /// Тип действия
+  type              ActionType
+  /// Описание/примечание
+  description       String
+
+  @@index([performedById])
+  @@index([performedToId])
+  @@index([type])
+}
+
+/// Аудит-лог системных событий (для аналитики и графаны)
+model AuditLog {
+  id        Int       @id @default(autoincrement())
+  actorId   Int?
+  action    String
+  metadata  Json?
+  createdAt DateTime  @default(now())
+}
